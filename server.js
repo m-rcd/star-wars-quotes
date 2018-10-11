@@ -5,6 +5,7 @@ const MongoClient = require('mongodb').MongoClient
 
 var db
 app.set('view engine', 'ejs')
+app.use(express.static('public'))
 
 MongoClient.connect('mongodb://starwars:abcdef1@ds225703.mlab.com:25703/star-wars-quote',{ useNewUrlParser: true },  (err, client) => {
   if (err) return console.log(err)
