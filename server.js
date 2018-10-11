@@ -34,8 +34,8 @@ app.post('/quotes', (req, res) => {
   })
 })
 
-app,put('/quotes', (req, res) => {
-  db.collections('quotes')
+app.put('/quotes', (req, res) => {
+  db.collection('quotes')
   .findOneAndUpdate({name: 'Yoda'}, {
     $set: {
       name: req.body.name,
