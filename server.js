@@ -4,8 +4,7 @@ const app = express();
 const MongoClient = require('mongodb').MongoClient
 
 var db
-app.set('view engine', 'ejs')
-app.use(express.static('public'))
+
 
 MongoClient.connect('mongodb://starwars:abcdef1@ds225703.mlab.com:25703/star-wars-quote',{ useNewUrlParser: true },  (err, client) => {
   if (err) return console.log(err)
@@ -15,7 +14,10 @@ MongoClient.connect('mongodb://starwars:abcdef1@ds225703.mlab.com:25703/star-war
   })
 })
 
+app.set('view engine', 'ejs')
 app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json())
+app.use(express.static('public'))
 
 app.get('/', (req, res) => {
   var cursor = db.collection('quotes').find().toArray(function(err, result) {
@@ -31,3 +33,19 @@ app.post('/quotes', (req, res) => {
     res.redirect('/')
   })
 })
+
+app,put('/quotes', (req, res) => {
+  db.collections('quotes')
+  .findOneAndUpdate({name: 'Yoda'}, {
+    $set: {
+      name: req.body.name,
+      quote: req.body.quote
+    }
+    }, {
+      sort: {_id: -1},
+      upsert: true
+    }, (err, result) => {
+      if (err) return res.send(err)
+      res.send(result)
+    })
+  })
