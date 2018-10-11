@@ -4,7 +4,9 @@ const app = express();
 const MongoClient = require('mongodb').MongoClient
 
 var db
-MongoClient.connect('mongodb://starwars:abcdef1@ds225703.mlab.com:25703/star-wars-quote',{ useNewUrlParser: true },  (err, client) => { 
+app.set('view engine', 'ejs')
+
+MongoClient.connect('mongodb://starwars:abcdef1@ds225703.mlab.com:25703/star-wars-quote',{ useNewUrlParser: true },  (err, client) => {
   if (err) return console.log(err)
   db = client.db('star-wars-quote')
   app.listen(3000, () => {
@@ -15,7 +17,10 @@ MongoClient.connect('mongodb://starwars:abcdef1@ds225703.mlab.com:25703/star-war
 app.use(bodyParser.urlencoded({extended: true}))
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html')
+  var cursor = db.collection('quotes').find().toArray(function(err, result) {
+	if (err) console.log(err)
+  res.render('index.ejs', {quotes: result})
+ })
 })
 
 app.post('/quotes', (req, res) => {
